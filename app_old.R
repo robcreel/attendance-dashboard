@@ -65,13 +65,18 @@ ui <- fluidPage(
         # Main panel for displaying outputs ----
         mainPanel(
             
-            # Output: Data file ----
-            tableOutput("contents")
+            # Output: Date Table
+            tableOutput("contents"),
+            
+            # Output: Date Plot
+            plotOutput("date_plot")
             
         )
         
     )
 )
+
+
 
 # Define server logic to read selected file ----
 server <- function(input, output) {
@@ -193,11 +198,27 @@ server <- function(input, output) {
         # Get number of class days.
         class_days_n <- length(unique(df$Date))
         
+        # Group data by date and get total number of enrolled students each day.
+        df %>% group_by(Date) %>% 
+            count(name = "Total") -> date_df
         
+        # Group data by date and count all who were in class any time that day.
+        df %>% group_by(Date) %>% 
+            filter(
+                Presence == "Present" | 
+                    Presence == "Late" | 
+                    Presence == "Left Early"
+            ) %>% 
+            count(name = "In_Class") -> date_p_df
+        
+        # Aggregate counts for In_Class, Total (Enrolled), and Percent.
+        date_df %>% add_column(In_Class = date_p_df$In_Class)  %>% 
+            mutate(Percent = round(In_Class / Total * 100)) %>% 
+            select(Date, In_Class, Total, Percent) -> date_df
         
         # if(input$disp == "head") {
             # return(head(df))
-            return(paste(c(class_days_n, " meetings.")))
+            return(date_df)
         # }
         # else {
         #     # return(df)
@@ -205,6 +226,22 @@ server <- function(input, output) {
         # }
         
     })
+    
+    output$date_plot <- renderPlot(
+        
+        qplot(c(1, 2, 3), c(1, 2, 2))
+        
+        
+        # Make plot
+        # ggplot(date_df, aes(factor(Date), Percent, group = 1)) +
+        #     geom_line() +
+        #     theme(axis.text.x = element_text(angle = 60, vjust = 0.5)) +
+        #     xlab("Date") +
+        #     ylim(0, 100) 
+        
+
+        
+    )
     
 }
 
