@@ -24,10 +24,10 @@ holiday <- "01-20"
 
 
 pre_process <- function(input_file){
-  raw_data <- pdf_text(input_file)
-  raw_data <- strsplit(raw_data, split = "\n")
-  header <<- raw_data[[1]][2]
-  return(raw_data)
+  raw <- pdf_text(input_file)
+  raw <- strsplit(raw, split = "\n")
+  header <<- raw[[1]][2]
+  return(raw)
 }
 
 # Function to extract name from a linelist of strings
@@ -77,7 +77,7 @@ build_df <- function(input_data){
   
   # Iterate over each page, over each line.
   for (i in 1:length(input_data)) {
-    page <- raw_data[[i]]
+    page <- input_data[[i]]
     for (j in 1:length(page)) {
       # line <- page[[j]]
       line <- page[j]
