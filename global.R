@@ -159,13 +159,6 @@ get_current_df <- function(input_df){
 # Function to build table of attendance by student
 build_student_df <- function(input_df){
   
-  # # Get currently enrolled students only.
-  # input_df %>% filter(Date == max(Date)) %>% 
-  #   pull(Student) -> cur_enr_students
-  # 
-  # # Restrict data frame to include only currently enrolled students.
-  # input_df %>% filter(Student %in% cur_enr_students) -> cur_enr_df
-  
   # Get table of students' days in class.
   input_df %>% 
     group_by(Student) %>% 

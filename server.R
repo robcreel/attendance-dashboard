@@ -36,14 +36,14 @@ server <- function(input, output) {
   ###
   
   # Render date dataframe as table.
-  output$contents <- renderTable(date_df())
+  output$date_table <- renderTable(date_df(), digits = 0)
   
   # Render date plot.
   output$date_plot <- renderPlot(build_date_plot(date_df()))
   
   # Render by-student table.
-  output$student_table <- renderTable(student_df())
+  output$student_table <- renderTable(student_df(), digits = 0)
   
   # Render by-date/by-student table
-  output$student_date_table <- renderTable(student_date_df())
+  output$student_date_table <- renderTable(student_date_df(), digits = 0)
 }

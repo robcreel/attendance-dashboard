@@ -1,72 +1,30 @@
 library(shiny)
+library(shinythemes)
 
 # Define UI for data upload app ----
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("yeti"),
   
   # App title ----
-  titlePanel("Uploading Files"),
+  titlePanel("East-West University Attendance Dashboard"),
   
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
-    
-    # Sidebar panel for inputs ----
-    sidebarPanel(
+
+    # Main panel for displaying outputs ----
+    mainPanel(
       
       # Input: Select a file ----
       fileInput("file1", "Choose File",
                 multiple = FALSE,
-                accept = c("text/pdf",
-                           # "text/comma-separated-values,text/plain",
-                           ".pdf")
+                accept = c("text/pdf",".pdf")
       ),
       
-      # # Horizontal line ----
-      # tags$hr(),
-      # 
-      # # Input: Checkbox if file has header ----
-      # checkboxInput("header", "Header", TRUE),
-      # 
-      # # Input: Select separator ----
-      # radioButtons("sep", "Separator",
-      #              choices = c(Comma = ",",
-      #                          Semicolon = ";",
-      #                          Tab = "\t"),
-      #              selected = ","),
-      # 
-      # # Input: Select quotes ----
-      # radioButtons("quote", "Quote",
-      #              choices = c(None = "",
-      #                          "Double Quote" = '"',
-      #                          "Single Quote" = "'"),
-      #              selected = '"'),
-      # 
-      # # Horizontal line ----
-      # tags$hr(),
-      # 
-      # # Input: Select number of rows to display ----
-      # radioButtons("disp", "Display",
-      #              choices = c(Head = "head",
-      #                          All = "all"),
-      #              selected = "head")
-      
-    ),
-    
-    # Main panel for displaying outputs ----
-    mainPanel(
-      
-      # Output: Date Table
-      tableOutput("contents"),
-      
-      # Output: Date Plot
-      plotOutput("date_plot"),
-      
-      # Output: Student Table
-      tableOutput("student_table"),
-      
-      # Output: Student-Date Table
-      tableOutput("student_date_table")
+      # Output: Tabbed analysis options
+      tabsetPanel(
+        tabPanel("By Date (Plot)", plotOutput("date_plot")),
+        tabPanel("By Date (Table)", tableOutput("date_table")),
+        tabPanel("By Student", tableOutput("student_table")),
+        tabPanel("By Student and Date", tableOutput("student_date_table"))
+      )
       
     )
     
-  )
 )
