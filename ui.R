@@ -58,7 +58,13 @@ ui <- fluidPage(
       tableOutput("contents"),
       
       # Output: Date Plot
-      plotOutput("date_plot")
+      plotOutput("date_plot"),
+      
+      # Output: Student Table
+      tableOutput("student_table"),
+      
+      # Output: Student-Date Table
+      tableOutput("student_date_table")
       
     )
     

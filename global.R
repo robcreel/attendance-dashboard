@@ -46,15 +46,17 @@ get_presence <- function(a_line_list){
       return("Present")
     } else if (TRUE %in%  stri_detect_fixed(a_line_list, "Absent")) {
       return("Absent")
+    } else if (TRUE %in%  stri_detect_fixed(a_line_list, "Other")) {
+      return("Other")
+    } else if (TRUE %in%  stri_detect_fixed(a_line_list, "Tardy")) {
+      return("Tardy")
     } else if (TRUE %in%  stri_detect_fixed(a_line_list, "Late")) {
       return("Late")
     }
   })
-  # return(student_presence)
 }
 
 # Function to extract the date from a linelist of strings
-
 get_date <- function(a_line_list){
   suppressWarnings({
     for (it in 1:length(a_line_list)){
@@ -68,6 +70,7 @@ get_date <- function(a_line_list){
   return(result)
 }
 
+# Function to build master dataframe
 build_df <- function(input_data){
   # Initialize empty data frame.
   df <- data.frame(Student=character(),
@@ -79,7 +82,6 @@ build_df <- function(input_data){
   for (i in 1:length(input_data)) {
     page <- input_data[[i]]
     for (j in 1:length(page)) {
-      # line <- page[[j]]
       line <- page[j]
       # Strip each line into a list, and store its length.
       linelist <- strsplit(line, "\\s+")[[1]]
@@ -110,6 +112,7 @@ build_df <- function(input_data){
   return(df)
 }
 
+# Function to build dataframe of attendance by date
 build_date_df <- function(input_df){
   # Group data by date and get total number of enrolled students each day.
   input_df %>% group_by(Date) %>% 
@@ -132,7 +135,7 @@ build_date_df <- function(input_df){
   return(date_df)
 }
 
-
+# Function to build plot of attendance by date
 build_date_plot <- function(input_df){
   date_plot <- ggplot(input_df, aes(factor(Date), Percent, group = 1)) +
     geom_line() +
@@ -142,19 +145,78 @@ build_date_plot <- function(input_df){
   return(date_plot)
 }
 
+# Function to subset master dataframe to only currently enrolled students
+get_current_df <- function(input_df){
+  # Get currently enrolled students only.
+  input_df %>% filter(Date == max(Date)) %>% 
+    pull(Student) -> cur_enr_students
+  
+  # Restrict data frame to include only currently enrolled students.
+  input_df %>% filter(Student %in% cur_enr_students) -> cur_enr_df
+  return(cur_enr_df)
+}
 
-###
-#
-# Execution
-#
-###
-# 
-# raw_data <- pre_process(input$file1$datapath)
-# 
-# # Build dataframe
-# df <<- build_df(raw_data)
-# 
-# # Build by-date dataframe
-# date_df <<- build_date_df(df)
+# Function to build table of attendance by student
+build_student_df <- function(input_df){
+  
+  # # Get currently enrolled students only.
+  # input_df %>% filter(Date == max(Date)) %>% 
+  #   pull(Student) -> cur_enr_students
+  # 
+  # # Restrict data frame to include only currently enrolled students.
+  # input_df %>% filter(Student %in% cur_enr_students) -> cur_enr_df
+  
+  # Get table of students' days in class.
+  input_df %>% 
+    group_by(Student) %>% 
+    filter(Presence == "Present" | 
+             Presence == "Late" | 
+             Presence == "Left Early" |
+             Presence == "Tardy") %>% 
+    count(name = "In_Class", .drop = FALSE) -> inc_table
+  
+  # Get table of students' days absent.
+  input_df %>%
+    group_by(Student) %>%
+    filter(Presence == "Absent") %>%
+    count(name = "Absent", .drop = FALSE) -> abs_table
+  
+  # Merge the tables and create percentage column.
+  merge(inc_table, abs_table, by = "Student", all = TRUE) %>% 
+    replace_na(replace = list(In_Class = 0, Absent = 0))  %>% 
+    mutate(Percent = round(In_Class / (In_Class + Absent) * 100)) -> att_table
+  
+  # Return final table.
+  return(att_table)
+}
 
-fake_plot <<- qplot(0, 0)
+# Function to build table of attendance by date and student
+build_date_student_df <- function(input_df){
+  abrev_cur_enr_df <- input_df %>% mutate(Presence = substr(Presence, 1, 2))
+  abrev_cur_enr_df %>% 
+    pivot_wider(names_from = Date, values_from  = Presence) -> untidy
+  return(untidy)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
