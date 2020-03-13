@@ -3,7 +3,7 @@ library(shiny)
 
 # Define server logic to read selected file ----
 server <- function(input, output) {
-  
+
   ###
   #
   # Build report components
@@ -16,7 +16,7 @@ server <- function(input, output) {
     raw_data <- pre_process(input$file1$datapath)
     build_df(raw_data)
     })
-  
+
   # Build date dataframe.
   date_df <- reactive(build_date_df(master_df()))
   
