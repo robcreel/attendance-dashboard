@@ -19,6 +19,7 @@ server <- function(input, output) {
 
   # Build date dataframe.
   date_df <- reactive(build_date_df(master_df()))
+  # date_dt <- reactive(DT::renderDataTable(date_df()))
   
   # Subset master dataframe to include only currently enrolled students
   current_df <- reactive(get_current_df(master_df()))
@@ -37,13 +38,17 @@ server <- function(input, output) {
   
   # Render date dataframe as table.
   output$date_table <- renderTable(date_df(), digits = 0)
+  # output$date_table <- renderDataTable(date_df())
   
   # Render date plot.
-  output$date_plot <- renderPlot(build_date_plot(date_df()))
+  # output$date_plot <- renderPlot(build_date_plot(date_df()))
+  output$date_plotly <- renderPlotly(build_date_plotly(date_df()))
   
   # Render by-student table.
-  output$student_table <- renderTable(student_df(), digits = 0)
+  output$student_table <- renderDataTable(student_df(),
+                                          options = list(pageLength = 25))
   
   # Render by-date/by-student table
-  output$student_date_table <- renderTable(student_date_df(), digits = 0)
+  output$student_date_table <- renderDataTable(student_date_df(),
+                                               options = list(pageLength = 25))
 }

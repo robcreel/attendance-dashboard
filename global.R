@@ -4,8 +4,6 @@ library(lubridate)
 library(tibble)
 library(dplyr)
 library(ggplot2)
-library(here)
-library(kableExtra)
 library(tidyr)
 library(stringr)
 library(stringi)
@@ -144,6 +142,27 @@ build_date_plot <- function(input_df){
     ylim(0, 100)
   return(date_plot)
 }
+
+# Function to build plot of attendance by date in Plotly
+build_date_plotly <- function(input_df){
+  date_plotly <- plot_ly(
+    x = input_df$Date,
+    y = input_df$Percent, 
+    type = 'scatter',
+    mode = 'lines+markers'
+    )
+  date_plotly %>% layout(title = 'Percentage of Enrolled Students Attending',
+                       xaxis = list(title = "Date"),
+                       yaxis = list(title = "Percent In Classroom", 
+                                    ticksuffix = "%",
+                                    range = c(0, 100)),
+                       margin = list(t = 108)
+                        # yaxis = list(zeroline = TRUE),
+                        # xaxis = list(zeroline = TRUE)
+                        ) -> date_plotly
+    return(date_plotly)
+}
+
 
 # Function to subset master dataframe to only currently enrolled students
 get_current_df <- function(input_df){
