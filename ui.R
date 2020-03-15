@@ -23,7 +23,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                         h4("In the Faculty Portal"),
                         tags$ul(
                           tags$li("Go to 'My Courses' > 'Course Options' > 'Attendance Report'."),
-                          tags$li("Make sure that the largest of the three available font sizes is selected,"),
+                          tags$li("Make sure that the smallest of the three available font sizes is selected."),
                           tags$li("Click 'View Attendance Report' button."),
                           tags$li("Click the printer icon."),
                           tags$li("Save as PDF."),
