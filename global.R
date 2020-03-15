@@ -157,8 +157,6 @@ build_date_plotly <- function(input_df){
                                     ticksuffix = "%",
                                     range = c(0, 100)),
                        margin = list(t = 108)
-                        # yaxis = list(zeroline = TRUE),
-                        # xaxis = list(zeroline = TRUE)
                         ) -> date_plotly
     return(date_plotly)
 }

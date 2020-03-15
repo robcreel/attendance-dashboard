@@ -4,10 +4,11 @@ library(plotly)
 library(DT)
 
 # Define UI for data upload app ----
-ui <- fluidPage(theme = shinytheme("sandstone"),
+ui <- fluidPage(theme = shinytheme("spacelab"),
 
   # App title ----
-  titlePanel("East-West University Attendance Dashboard"),
+  titlePanel(title=div(tags$img(src="./EW_logo.svg", height="15%", width="15%"),
+             "Attendance Dashboard")),
   
       # Setup Tabs
       tabsetPanel(
@@ -17,13 +18,19 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                            multiple = FALSE,
                            accept = c("text/pdf",".pdf")
                  ),
-                 p("In the Faculty Portal, go to 'My Courses' > 'Course Options' > 'Attendance Report'.
-                 Make sure that the largest of the three available font sizes is selected, 
-                 and click 'View Attendance Report' button.  
-                 Click the printer icon, save the results as a PDF, and upload that PDF in the field above.  
-                 It is recommended your browser be full screen when using this webapp.
-                   ")
-                 ),
+                 column(8,
+                        h3("To Generate the 'Attendance Report' PDF for upload:"),
+                        h4("In the Faculty Portal"),
+                        tags$ul(
+                          tags$li("Go to 'My Courses' > 'Course Options' > 'Attendance Report'."),
+                          tags$li("Make sure that the largest of the three available font sizes is selected,"),
+                          tags$li("Click 'View Attendance Report' button."),
+                          tags$li("Click the printer icon."),
+                          tags$li("Save as PDF."),
+                          tags$li("Upload that PDF in the field above.")
+                        ),
+                 )
+        ),
         tabPanel("By Date (Plot)", plotlyOutput("date_plotly")),
         tabPanel("By Date (Table)", tableOutput("date_table")),
         # tabPanel("By Date (Table)", dataTableOutput("date_table")),
