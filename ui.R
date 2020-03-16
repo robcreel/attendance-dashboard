@@ -7,8 +7,11 @@ library(DT)
 ui <- fluidPage(theme = shinytheme("spacelab"),
 
   # App title ----
-  titlePanel(title=div(tags$img(src="./EW_logo.svg", height="15%", width="15%"),
-             "Attendance Dashboard")),
+  titlePanel(div(tags$img(src="./EW_logo.svg", height="15%", width="15%"), "Attendance Dashboard"), 
+            windowTitle =  "Attendance Dashboard"),
+  
+  # Show course name
+  h4(textOutput("course_name")),
   
       # Setup Tabs
       tabsetPanel(
@@ -33,7 +36,6 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
         ),
         tabPanel("By Date (Plot)", plotlyOutput("date_plotly")),
         tabPanel("By Date (Table)", tableOutput("date_table")),
-        # tabPanel("By Date (Table)", dataTableOutput("date_table")),
         tabPanel("By Student", dataTableOutput("student_table")),
         tabPanel("By Student and Date", dataTableOutput("student_date_table"))
       ),

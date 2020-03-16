@@ -20,12 +20,16 @@ a0 <- "A00000"
 # holiday <- "2020-01-20"
 holiday <- "01-20"
 
-
+# Function to extract raw data from PDF
 pre_process <- function(input_file){
   raw <- pdf_text(input_file)
   raw <- strsplit(raw, split = "\n")
-  header <<- raw[[1]][2]
   return(raw)
+}
+
+# Function to get course name from raw data.
+get_course_name <- function(raw){
+  return(raw[[1]][2])
 }
 
 # Function to extract name from a linelist of strings
@@ -207,26 +211,5 @@ build_date_student_df <- function(input_df){
     pivot_wider(names_from = Date, values_from  = Presence) -> untidy
   return(untidy)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

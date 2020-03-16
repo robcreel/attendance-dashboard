@@ -10,12 +10,20 @@ server <- function(input, output) {
   #
   ###
   
-  # Build master dataframe.
-  master_df <- reactive({
+  # Extract raw data from PDF.
+  raw_data <- reactive({
     req(input$file1)
     raw_data <- pre_process(input$file1$datapath)
-    build_df(raw_data)
+  })
+  
+  # Build master dataframe.
+  master_df <- reactive({
+    # course_name <- get_course_name(raw_data())
+    build_df(raw_data())
     })
+  
+  # Get class name
+  course_name <- reactive(get_course_name(raw_data()))
 
   # Build date dataframe.
   date_df <- reactive(build_date_df(master_df()))
@@ -36,19 +44,22 @@ server <- function(input, output) {
   #
   ###
   
-  # Render date dataframe as table.
-  output$date_table <- renderTable(date_df(), digits = 0)
-  # output$date_table <- renderDataTable(date_df())
-  
   # Render date plot.
   # output$date_plot <- renderPlot(build_date_plot(date_df()))
   output$date_plotly <- renderPlotly(build_date_plotly(date_df()))
   
+  # Render date dataframe as table.
+  output$date_table <- renderTable(date_df(), digits = 0)
+  # output$date_table <- renderDataTable(date_df())
+  
   # Render by-student table.
   output$student_table <- renderDataTable(student_df(),
-                                          options = list(pageLength = 25))
+                                          options = list(pageLength = 50))
   
   # Render by-date/by-student table
   output$student_date_table <- renderDataTable(student_date_df(),
-                                               options = list(pageLength = 25))
+                                               options = list(pageLength = 50))
+  
+  # Render course name
+  output$course_name <- renderText(course_name())
 }
