@@ -12,6 +12,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
   
   # Show course name
   h4(textOutput("course_name")),
+  # downloadButton("downloadData", label = "Download"),
   
       # Setup Tabs
       tabsetPanel(
@@ -21,7 +22,6 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                            multiple = FALSE,
                            accept = c("text/pdf",".pdf")
                  ),
-                 column(8,
                         h3("To Generate the 'Attendance Report' PDF for upload:"),
                         h4("In the Faculty Portal"),
                         tags$ul(
@@ -32,7 +32,12 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                           tags$li("Save as PDF."),
                           tags$li("Upload that PDF in the field above.")
                         ),
-                 )
+                 column(8,
+                 "If you would like to see what this does and you don't have your own attendance data, you can download this sample PDF.  It contains an anonymized version of the type of PDF this app expects to be uploaded.  Just download the file, and then upload it above.",
+                 ),
+                 
+                 downloadButton("downloadData", label = "Anonymous Sample PDF"),
+                 
         ),
         tabPanel("By Date (Plot)", plotlyOutput("date_plotly")),
         tabPanel("By Date (Table)", tableOutput("date_table")),

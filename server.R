@@ -62,4 +62,16 @@ server <- function(input, output) {
   
   # Render course name
   output$course_name <- renderText(course_name())
+  
+  # Sample PDF for download and re-upload
+  output$downloadData <- downloadHandler(
+    filename <- function() {
+      "Attendance_Report_Fake.pdf"
+    },
+    
+    content <- function(file) {
+      file.copy("www/Attendance_Report_Fake.pdf", file)
+    },
+    # contentType = 
+  )
 }
