@@ -10,6 +10,11 @@ server <- function(input, output) {
   #
   ###
   
+  # raw_data <- reactive({
+    raw_data <- pre_process("www/Attendance_Report_Fake.pdf")
+  # })
+  
+  
   # Extract raw data from PDF.
   raw_data <- reactive({
     req(input$file1)
@@ -34,6 +39,9 @@ server <- function(input, output) {
   
   # Build by-student table
   student_df <- reactive(build_student_df(current_df()))
+  
+  # # Get noshows
+  # noshows <- reactive(get_noshows(student_df()))
   
   # Build by-date/by-student table
   student_date_df <- reactive(build_date_student_df(current_df()))
@@ -63,6 +71,9 @@ server <- function(input, output) {
   # Render course name
   output$course_name <- renderText(course_name())
   
+  # # Render noshows
+  # output$noshows <- renderUI(noshows())
+  
   # Sample PDF for download and re-upload
   output$downloadData <- downloadHandler(
     filename <- function() {
@@ -72,6 +83,31 @@ server <- function(input, output) {
     content <- function(file) {
       file.copy("www/Attendance_Report_Fake.pdf", file)
     },
-    # contentType = 
   )
+  
+  ### Report Download
+  output$report <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "Attendance_Report.pdf",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "attendance_report.rmd")
+      file.copy("attendance_report.rmd", tempReport, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      # params <- list(n = input$slider)
+      params = list(input_file = input$file1$datapath)
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+    }
+  )
+  ### End report download
 }

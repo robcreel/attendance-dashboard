@@ -13,6 +13,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
   # Show course name
   h4(textOutput("course_name")),
   # downloadButton("downloadData", label = "Download"),
+  downloadButton("report", "Generate report"),
   
       # Setup Tabs
       tabsetPanel(
@@ -43,6 +44,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
         tabPanel("By Date (Table)", tableOutput("date_table")),
         tabPanel("By Student", dataTableOutput("student_table")),
         tabPanel("By Student and Date", dataTableOutput("student_date_table"))
+        # , tabPanel("No Shows", textOutput("noshows"),)
       ),
 
 )

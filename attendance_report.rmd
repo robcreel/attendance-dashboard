@@ -1,3 +1,19 @@
+---
+params:
+  d: !r Sys.Date()
+  input_file: "dummy.pdf"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+  keep_tex: yes
+  keep_md: yes
+header-includes:
+  - \usepackage{fontspec}
+  - \setmainfont{Lato}
+---
+
+
+```{r setup, include=FALSE}
 library(pdftools)
 library(magrittr)
 library(lubridate)
@@ -207,3 +223,59 @@ build_date_student_df <- function(input_df){
     pivot_wider(names_from = Date, values_from  = Presence) -> untidy
   return(untidy)
 }
+
+
+library(kableExtra)
+```
+
+
+```{r data_prep, echo=FALSE}
+params$input_file %>% pre_process() -> prepped_data
+prepped_data %>% get_course_name() -> course_name
+course_name %>% str_extract("[A-Z]{2}[0-9]{3}") -> title
+
+prepped_data %>% build_df() -> df
+df %>% build_date_df() -> date_df
+df %>% get_current_df() -> current_df
+current_df %>% build_student_df() -> student_df
+current_df %>% build_date_student_df() -> student_date_df
+date_df %>% build_date_plot() -> date_plot
+```
+
+
+---
+title: "Attendance Report: `r title`"
+---
+
+## `r course_name`
+
+## Attendance by Date
+
+
+```{r by_date, echo=FALSE, fig.height=3}
+date_plot
+kable(date_df)
+```
+
+\pagebreak
+
+## `r course_name`
+
+## Attendance by Student
+
+```{r by_student, echo=FALSE}
+kable(student_df)
+```
+
+\pagebreak
+
+## `r course_name`
+
+## Attendance by Student and Date
+
+```{r by_student_and_date, echo=FALSE}
+kable(student_date_df)
+```
+
+
+
