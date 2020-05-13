@@ -12,8 +12,6 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
   
   # Show course name
   h4(textOutput("course_name")),
-  # downloadButton("downloadData", label = "Download"),
-  downloadButton("report", "Generate report"),
   
       # Setup Tabs
       tabsetPanel(
@@ -43,8 +41,13 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
         tabPanel("By Date (Plot)", plotlyOutput("date_plotly")),
         tabPanel("By Date (Table)", tableOutput("date_table")),
         tabPanel("By Student", dataTableOutput("student_table")),
-        tabPanel("By Student and Date", dataTableOutput("student_date_table"))
-        # , tabPanel("No Shows", textOutput("noshows"),)
+        tabPanel("By Student and Date", dataTableOutput("student_date_table")),
+        # , tabPanel("No Shows", textOutput("noshows"),),
+        tabPanel(
+          "Download Report", downloadButton("report", "Generate report"),
+          h4("Note 1: This report can only be generated once the 'Attendance Record.pdf' file is uploaded."),
+          h4("Note 2: Report generation takes a few seconds after clicking the button.  Thank you for your patience."),
+        )
       ),
 
 )

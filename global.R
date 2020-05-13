@@ -207,3 +207,8 @@ build_date_student_df <- function(input_df){
     pivot_wider(names_from = Date, values_from  = Presence) -> untidy
   return(untidy)
 }
+
+# Function to get list of no-shows
+get_noshows <- function(input_df){
+  input_df %>% filter(In_Class == 0)
+}

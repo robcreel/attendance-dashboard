@@ -10,25 +10,29 @@ server <- function(input, output) {
   #
   ###
   
-  # raw_data <- reactive({
-    raw_data <- pre_process("www/Attendance_Report_Fake.pdf")
-  # })
+  raw_data <- reactive({
+    raw_data <- pre_process(file.copy("www/Attendance_Report_Fake.pdf", file))
+  })
   
   
   # Extract raw data from PDF.
-  raw_data <- reactive({
-    req(input$file1)
-    raw_data <- pre_process(input$file1$datapath)
-  })
+  # raw_data <- reactive({
+  #   req(input$file1)
+  #   raw_data <- pre_process(input$file1$datapath)
+  # })
   
   # Build master dataframe.
   master_df <- reactive({
-    # course_name <- get_course_name(raw_data())
     build_df(raw_data())
     })
   
   # Get class name
   course_name <- reactive(get_course_name(raw_data()))
+  
+  # Get title
+  title <- reactive(course_name() %>% str_extract("[A-Z]{2}[0-9]{3}"))
+  
+  # course_name %>% str_extract("[A-Z]{2}[0-9]{3}") -> title
 
   # Build date dataframe.
   date_df <- reactive(build_date_df(master_df()))
@@ -76,10 +80,7 @@ server <- function(input, output) {
   
   # Sample PDF for download and re-upload
   output$downloadData <- downloadHandler(
-    filename <- function() {
-      "Attendance_Report_Fake.pdf"
-    },
-    
+    filename <- function() {"Attendance_Report_Fake.pdf"},
     content <- function(file) {
       file.copy("www/Attendance_Report_Fake.pdf", file)
     },
@@ -88,7 +89,7 @@ server <- function(input, output) {
   ### Report Download
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "Attendance_Report.pdf",
+    filename = paste("Attendance_Report_", title(), ".pdf", sep = ""),
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
