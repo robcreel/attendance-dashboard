@@ -23,4 +23,4 @@ The user, typically an East-West University faculty member, navigates the dashbo
 
 ![](./www/mock_sample.png)
 
-The above mock data shows a sample of the arrangement of student attendance data in the CAMS PDF report.  It features some totals, and is already fairly tidy, but needs parsing to show useful summary information.
+The above mock data shows a sample of the arrangement of student attendance data in the CAMS PDF report.  It features some totals, and is already fairly tidy, but it needs parsing to show useful summary information.
