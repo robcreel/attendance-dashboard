@@ -17,6 +17,7 @@ The user, typically an East-West University faculty member, navigates the dashbo
 * By Date (Table) - Shows a table of attendance data over the duration of the class
 * By Student - Shows a table of how may times each student as present or absent.
 * By Student and Date - Shows a table of whether a student was present or absent on each class meeting date.
+* Download Report - This feature is still in development.  It will allow users to download PDFs of reports of the summary information shown on the dashboard.
 
 ## Raw Data
 
