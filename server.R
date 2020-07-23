@@ -10,16 +10,17 @@ server <- function(input, output) {
   #
   ###
   
+  # Preprocess default (mock) unless there is genuine uploaded data.
   raw_data <- reactive({
-    raw_data <- pre_process(file.copy("www/Attendance_Report_Fake.pdf", file))
+    inFile <- input$file1
+
+    if (!is.null(inFile)){
+      # raw_data <- inFile$datapath
+      raw_data <- pre_process(input$file1$datapath)
+    } else {
+      raw_data <- pre_process("www/Attendance_Report_Fake.pdf")
+    }
   })
-  
-  
-  # Extract raw data from PDF.
-  # raw_data <- reactive({
-  #   req(input$file1)
-  #   raw_data <- pre_process(input$file1$datapath)
-  # })
   
   # Build master dataframe.
   master_df <- reactive({

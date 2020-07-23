@@ -5,8 +5,8 @@ account: robcreel
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1946759
-bundleId: 3034306
+bundleId: 3423821
 url: https://robcreel.shinyapps.io/attendance/
-when: 1587298877.34838
+when: 1595463743.64941
 asMultiple: FALSE
 asStatic: FALSE
